@@ -38,5 +38,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ../../vendor/glad/include
         ../../vendor/glfw/include
         ../../vendor/imgui
-        ../../vendor/stb
 )

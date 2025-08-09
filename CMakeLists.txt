@@ -3,4 +3,5 @@ project(PuffinTextEditor)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(PuffinTextEditor main.cpp)
+
+add_subdirectory(src/Engine)
