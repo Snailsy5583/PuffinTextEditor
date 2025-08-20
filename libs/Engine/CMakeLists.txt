@@ -16,26 +16,37 @@ set(__src
         Window.cpp
 
         stb.cpp
-        GameObject.cpp GameObject.h Component.h Component.cpp)
+        GameObject.cpp GameObject.h
+        Component.h Component.cpp
+        )
 
 set(__src__Events
         Events/Events.h
         Events/MouseEvents.h
         Events/WindowEvents.h
-)
+        )
 
-add_library(${PROJECT_NAME} ${__src} ${__src__Events})
+set(__src__FontRendering
+        TextRendering/Font.h TextRendering/Font.cpp
+        TextRendering/FontRenderer.h TextRendering/FontRenderer.cpp
+        Events/KeyboardEvents.h)
+
+add_library(${PROJECT_NAME} ${__src} ${__src__Events} ${__src__FontRendering})
 
 ################################# linking ######################################
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PRIVATE
         glfw
         glad
-        ImGui
         opengl32
-)
+        freetype
+        )
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PRIVATE
         ../../vendor/glad/include
         ../../vendor/glfw/include
+        ../../vendor/freetype/include
+        ../../vendor/glm
         ../../vendor/imgui
-)
+        ../../vendor/stb
+        ../Engine
+        )

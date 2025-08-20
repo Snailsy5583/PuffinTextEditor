@@ -1,0 +1,70 @@
+#pragma once
+
+// #include "../Window.h"
+#include <functional>
+#include <iostream>
+#include <vector>
+
+namespace Engine
+{
+	class Window;
+	enum EventType {
+		WindowClosed,
+		WindowResized,
+		MouseButtonPressed,
+		MouseButtonReleased,
+		MouseMoved,
+		MouseScrolled,
+		KeyboardCharTyped,
+		KeyboardKeyPressed,
+		KeyboardKeyReleased,
+		KeyboardKeyRepeated
+	};
+
+	class Event
+	{
+		friend class EventDispatcher;
+
+	public:
+		Event(const Window &win) : m_Window(win) {}
+
+		const Window &GetWindow() const { return m_Window; }
+
+		virtual EventType GetEventType() const = 0;
+
+		virtual const char *GetName() const = 0;
+
+		inline bool GetIsHandled() const { return m_Handled; }
+
+		inline void SetIsHandled(bool value) { m_Handled = value; }
+
+	protected:
+		bool m_Handled = false;
+
+		const Window &m_Window;
+	};
+
+	class EventDispatcher
+	{
+		template<typename T>
+		using EventFunc = std::function<bool(T &)>;
+
+	public:
+		EventDispatcher(Event &event) : m_Event(event) {}
+
+		template<typename T>
+		bool Dispatch(EventFunc<T> func)
+		{
+			if (m_Event.GetEventType() == T::GetStaticType()) {
+				m_Event.m_Handled = func(*(T *) &m_Event);
+				return m_Event.m_Handled;
+			}
+			return false;
+		}
+
+	private:
+		Event &m_Event;
+	};
+
+
+}	 // namespace Engine
